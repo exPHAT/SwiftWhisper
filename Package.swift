@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "whisper.cpp",
+    name: "whisper.spm",
     products: [
         .library(
-            name: "whisper.cpp",
-            targets: ["whisper.cpp"]),
+            name: "whisper",
+            targets: ["whisper"]),
     ],
     targets: [
-        .target(name: "whisper.cpp", dependencies:[], exclude: []),
-        .target(name: "test-objc", dependencies:["whisper.cpp"]),
-        .target(name: "test-swift", dependencies:["whisper.cpp"])
+        .target(name: "whisper", dependencies:[]),
+        .target(name: "test-objc", dependencies:["whisper"]),
+        .target(name: "test-swift", dependencies:["whisper"])
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )

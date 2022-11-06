@@ -1,4 +1,4 @@
 import Foundation
-import whisper.cpp
+import whisper
 
 // TODO

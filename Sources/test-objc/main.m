@@ -1,4 +1,4 @@
-#import "whisper.cpp/whisper.h"
+#import "whisper.h"
 
 #import <Foundation/Foundation.h>
 
