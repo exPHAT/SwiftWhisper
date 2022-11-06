@@ -4,9 +4,11 @@
 
 ## Using as a package in your project
 
-In XCode: File -> Swift Packages -> Add Package Dependency
+In XCode: File -> Add Packages
 
 Enter package URL: `https://github.com/ggerganov/whisper.spm`
+
+<img width="1091" alt="image" src="https://user-images.githubusercontent.com/1991296/200189694-aed421ae-6fd7-4b17-8211-e43040c32e97.png">
 
 ## Build package from command line
 
