@@ -1,3 +1,5 @@
+// Basic usage of whisper.cpp in Objective-C
+
 #import "whisper.h"
 
 #import <Foundation/Foundation.h>
@@ -12,6 +14,7 @@
 #define CHECK_F(cond) CHECK(!(cond))
 
 int main() {
+    // load the model (use correct path)
     struct whisper_context * ctx = whisper_init("models/for-tests-ggml-base.en.bin");
     CHECK_T(ctx != NULL);
 
