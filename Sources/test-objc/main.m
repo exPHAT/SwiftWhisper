@@ -11,9 +11,47 @@
 #define CHECK_T(cond) CHECK(cond)
 #define CHECK_F(cond) CHECK(!(cond))
 
-
 int main() {
-    // TODO
+    struct whisper_context * ctx = whisper_init("models/for-tests-ggml-base.en.bin");
+    CHECK_T(ctx != NULL);
+
+    // run the model
+    struct whisper_full_params params = whisper_full_default_params(WHISPER_SAMPLING_GREEDY);
+
+    params.print_realtime       = true;
+    params.print_progress       = false;
+    params.print_timestamps     = true;
+    params.print_special_tokens = false;
+    params.translate            = false;
+    params.language             = "en";
+    params.n_threads            = 4;
+    params.offset_ms            = 0;
+
+    const int n_samples = WHISPER_SAMPLE_RATE;
+    float pcmf32[n_samples];
+
+    // TODO: fill PCM with some audio
+
+    if (whisper_full(ctx, params, pcmf32, n_samples) != 0) {
+        NSLog(@"Failed to run the model");
+
+        return -1;
+    }
+
+    // print the results
+    const int n_segments = whisper_full_n_segments(ctx);
+
+    for (int i = 0; i < n_segments; i++) {
+        const char * text_cur = whisper_full_get_segment_text(ctx, i);
+
+        NSLog(@"%s", text_cur);
+    }
+
+    // internal model timing
+    whisper_print_timings(ctx);
+
+    // free memory
+    whisper_free(ctx);
 
     return 0;
 }
