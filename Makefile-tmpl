@@ -6,7 +6,7 @@ update-submodule:
 	rsync ../../ggml.c Sources/whisper.cpp/
 	rsync ../../ggml.h Sources/whisper.cpp/
 	rsync ../../whisper.cpp Sources/whisper.cpp/
-	rsync ../../whisper.h Sources/whisper.cpp/
+	rsync ../../whisper.h Sources/whisper.cpp/include/
 
 SOURCES := $(shell find Sources/ -print)
 .build: $(SOURCES)

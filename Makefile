@@ -3,10 +3,10 @@ default: build-submodule
 .PHONY:
 update-submodule:
 	# create a clean (maybe updated) copy of whisper.cpp
-	rsync ../../ggml.c Sources/whisper.cpp/
-	rsync ../../ggml.h Sources/whisper.cpp/
-	rsync ../../whisper.cpp Sources/whisper.cpp/
-	rsync ../../whisper.h Sources/whisper.cpp/
+	rsync ../../ggml.c Sources/whisper/
+	rsync ../../ggml.h Sources/whisper/
+	rsync ../../whisper.cpp Sources/whisper/
+	rsync ../../whisper.h Sources/whisper/include/
 
 SOURCES := $(shell find Sources/ -print)
 .build: $(SOURCES)
@@ -21,11 +21,11 @@ build: Package.swift .build
 
 .PHONY:
 publish: publish-trigger
-	echo " \
+	@echo " \
 		\n\
 		cd /path/to/whisper.cpp/bindings/ios\n\
 		git commit\n\
-		git tag 0.0.1\n\
+		git tag 1.0.0\n\
 		git push origin master --tags\n\
 		"
 
