@@ -25,7 +25,7 @@ publish: publish-trigger
 		\n\
 		cd /path/to/whisper.cpp/bindings/ios\n\
 		git commit\n\
-		git tag 1.0.2\n\
+		git tag 1.0.3\n\
 		git push origin master --tags\n\
 		"
 

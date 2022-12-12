@@ -7,14 +7,14 @@ let ctx = whisper_init("models/for-tests-ggml-base.en.bin")
 
 var params = whisper_full_default_params(WHISPER_SAMPLING_GREEDY)
 
-params.print_realtime       = true
-params.print_progress       = false
-params.print_timestamps     = true
-params.print_special_tokens = false
-params.translate            = false
-//params.language             = "en";
-params.n_threads            = 4
-params.offset_ms            = 0
+params.print_realtime   = true
+params.print_progress   = false
+params.print_timestamps = true
+params.print_special    = false
+params.translate        = false
+//params.language         = "en";
+params.n_threads        = 4
+params.offset_ms        = 0
 
 let n_samples = Int32(WHISPER_SAMPLE_RATE)
 var pcmf32 = [Float](repeating: 0, count: Int(n_samples))
