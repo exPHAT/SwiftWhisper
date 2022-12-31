@@ -6,10 +6,10 @@ let package = Package(
     products: [
         .library(
             name: "whisper",
-            targets: ["whisper"]),
+            targets: ["whisper"])
     ],
     targets: [
-        .target(name: "whisper", dependencies:[]),
+        .target(name: "whisper", dependencies:[], cSettings: [.unsafeFlags(["-O3", "-DGGML_USE_ACCELERATE=1"])]),
         .target(name: "test-objc", dependencies:["whisper"]),
         .target(name: "test-swift", dependencies:["whisper"])
     ],
