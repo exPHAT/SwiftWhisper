@@ -17,7 +17,7 @@ params.n_threads        = 4
 params.offset_ms        = 0
 
 let n_samples = Int32(WHISPER_SAMPLE_RATE)
-var pcmf32 = [Float](repeating: 0, count: Int(n_samples))
+let pcmf32 = [Float](repeating: 0, count: Int(n_samples))
 
 let ret = whisper_full(ctx, params, pcmf32, n_samples)
 assert(ret == 0, "Failed to run the model")
