@@ -20,6 +20,11 @@ build-submodule: update-submodule Package.swift .build
 build: Package.swift .build
 
 .PHONY:
+test: build
+	./.build/debug/test-objc
+	./.build/debug/test-swift
+
+.PHONY:
 publish: publish-trigger
 	@echo " \
 		\n\
