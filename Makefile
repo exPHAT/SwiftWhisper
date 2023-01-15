@@ -20,12 +20,17 @@ build-submodule: update-submodule Package.swift .build
 build: Package.swift .build
 
 .PHONY:
+test: build
+	./.build/debug/test-objc
+	./.build/debug/test-swift
+
+.PHONY:
 publish: publish-trigger
 	@echo " \
 		\n\
 		cd /path/to/whisper.cpp/bindings/ios\n\
 		git commit\n\
-		git tag 1.0.4\n\
+		git tag 1.1.0\n\
 		git push origin master --tags\n\
 		"
 
