@@ -10,9 +10,7 @@ let package = Package(
     ],
     targets: [
         .target(name: "Whisper", dependencies: [.target(name: "whisper_cpp")]),
-        .target(name: "whisper_cpp", dependencies:[], cSettings: [.unsafeFlags(["-O3", "-DGGML_USE_ACCELERATE=1"])]),
-//        .target(name: "test-objc", dependencies: [.target(name: "Whisper")]),
-//        .target(name: "test-swift", dependencies: [.target(name: "Whisper")])
+        .target(name: "whisper_cpp", dependencies:[], cSettings: [.define("GGML_USE_ACCELERATE")]),
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )
