@@ -2738,6 +2738,10 @@ struct whisper_full_params whisper_full_default_params(enum whisper_sampling_str
 
         /*.encoder_begin_callback           =*/ nullptr,
         /*.encoder_begin_callback_user_data =*/ nullptr,
+
+        /*.progress_callback=*/ nullptr,
+        /*.progress_callback_user_data=*/ nullptr,
+
     };
 
     switch (strategy) {
@@ -3351,6 +3355,11 @@ int whisper_full(
             if (params.print_progress) {
                 fprintf(stderr, "%s: progress = %3d%%\n", __func__, progress_prev);
             }
+        }
+
+        if (params.progress_callback) {
+            const float progress_float = ((float)(seek - seek_start)) / ((float)(seek_end - seek_start));
+            params.progress_callback(ctx, progress_float, params.progress_callback_user_data);
         }
 
         // of only 1 second left, then stop
