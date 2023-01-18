@@ -94,7 +94,9 @@ public class Whisper {
                 ))
             }
 
-            delegate.whisper(whisper, didProcessNewSegments: newSegments, atIndex: Int(startIndex))
+            DispatchQueue.main.async {
+                delegate.whisper(whisper, didProcessNewSegments: newSegments, atIndex: Int(startIndex))
+            }
         }
         params.new_segment_callback_user_data = Unmanaged.passRetained(self).toOpaque()
 
@@ -121,8 +123,10 @@ public class Whisper {
                 )
             }
 
-            delegate?.whisper(self, didCompleteWithSegments: segments)
-            completionHandler(.success(segments))
+            DispatchQueue.main.async {
+                self.delegate?.whisper(self, didCompleteWithSegments: segments)
+                completionHandler(.success(segments))
+            }
         }
     }
 
