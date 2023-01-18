@@ -228,6 +228,10 @@ extern "C" {
     // Use the whisper_full_...() functions to obtain the text segments
     typedef void (*whisper_new_segment_callback)(struct whisper_context * ctx, int n_new, void * user_data);
 
+    // Progress update callback, ranges from 0 to 1
+    typedef void (*whisper_progress_callback)(struct whisper_context * ctx, float progress, void * user_data);
+
+
     // Encoder begin callback
     // If not NULL, called before the encoder starts
     // If it returns false, the computation is aborted
@@ -303,6 +307,9 @@ extern "C" {
         // called each time before the encoder starts
         whisper_encoder_begin_callback encoder_begin_callback;
         void * encoder_begin_callback_user_data;
+
+        whisper_progress_callback progress_callback;
+        void * progress_callback_user_data;
     };
 
     WHISPER_API struct whisper_full_params whisper_full_default_params(enum whisper_sampling_strategy strategy);
