@@ -1,6 +1,7 @@
 import Foundation
 
 public enum WhisperLanguage: String, RawRepresentable {
+    case auto          = "auto"
     case english       = "en"
     case chinese       = "zh"
     case german        = "de"
