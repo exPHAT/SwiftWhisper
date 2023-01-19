@@ -20,6 +20,11 @@ public struct WhisperParams {
         get { whisperParams[keyPath: keyPath] }
         set { whisperParams[keyPath: keyPath] = newValue }
     }
+
+    public var language: WhisperLanguage {
+        get { .init(rawValue: String(Substring(cString: whisperParams.language)))! }
+        set { newValue.rawValue.withCString { whisperParams.language = $0 } }
+    }
 }
 
 public struct Segment {
