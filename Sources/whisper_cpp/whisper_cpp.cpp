@@ -2710,7 +2710,7 @@ struct whisper_full_params whisper_full_default_params(enum whisper_sampling_str
         /*.prompt_tokens    =*/ nullptr,
         /*.prompt_n_tokens  =*/ 0,
 
-        /*.language         =*/ "en",
+        /*.language         =*/ "auto",
 
         /*.suppress_blank   =*/ true,
 

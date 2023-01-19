@@ -1,6 +1,6 @@
 import Foundation
 
-public enum WhisperLanguage: String, RawRepresentable {
+public enum WhisperLanguage: String, RawRepresentable, CaseIterable, Identifiable {
     case auto          = "auto"
     case english       = "en"
     case chinese       = "zh"
@@ -101,4 +101,10 @@ public enum WhisperLanguage: String, RawRepresentable {
     case bashkir       = "ba"
     case javanese      = "jw"
     case sundanese     = "su"
+    
+    public var id: String { self.rawValue }
+    
+    public var displayName: String {
+        String(describing: self)
+    }
 }
