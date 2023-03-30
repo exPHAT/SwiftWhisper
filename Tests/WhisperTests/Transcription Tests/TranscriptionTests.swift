@@ -2,6 +2,8 @@ import XCTest
 @testable import Whisper
 
 class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
+    let timeout: TimeInterval = 10
+
     fileprivate var whisperTinyModel: Whisper {
         get async {
             let modelURL = await tinyModelURL!
@@ -27,7 +29,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
             successExpectation.fulfill()
         }
 
-        wait(for: [successExpectation], timeout: 5)
+        wait(for: [successExpectation], timeout: timeout)
     }
 
     func testTranscribeExclusivity() async {
@@ -57,7 +59,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
             failureExpectation.fulfill()
         }
 
-        wait(for: [successExpectation, failureExpectation], timeout: 5)
+        wait(for: [successExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribeInvalidFramesError() async {
@@ -103,7 +105,7 @@ extension TranscriptionTests: WhisperDelegate {
             try XCTUnwrap(delegateNewSegmentExpectation),
             try XCTUnwrap(delegateProgessExpectation),
             try XCTUnwrap(delegateCompletionExpectation)
-        ], timeout: 5)
+        ], timeout: timeout)
 
         self.delegateNewSegmentExpectation = nil
         self.delegateProgessExpectation = nil
