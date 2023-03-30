@@ -9,6 +9,7 @@ public class Whisper {
     public private(set) var inProgress = false
 
     internal var frameCount: Int? // Manually track total audio frames for progress calculation (value not in `whisper_state` yet)
+    internal var cancelCallback: (() -> Void)?
 
     public init(fromFileURL fileURL: URL, withParams params: WhisperParams = .default) {
         self.whisperContext = fileURL.relativePath.withCString { whisper_init_from_file($0) }
@@ -33,11 +34,12 @@ public class Whisper {
     private func prepareCallbacks() {
         /*
          C-style callbacks can't capture any references in swift, so we'll convert `self`
-         to a pointer which whisper passes back as `new_segment_callback_user_data`.
+         to a pointer which whisper passes back as the `user_data` argument.
 
          We can unwrap that and obtain a copy of self inside the callback.
          */
         params.new_segment_callback_user_data = Unmanaged.passRetained(self).toOpaque()
+        params.encoder_begin_callback_user_data = Unmanaged.passRetained(self).toOpaque()
 
         params.new_segment_callback = { (ctx: OpaquePointer?, _: OpaquePointer?, newSegmentCount: Int32, userData: UnsafeMutableRawPointer?) in
             guard let ctx, let userData else { return }
@@ -77,6 +79,17 @@ public class Whisper {
                 delegate.whisper(whisper, didProcessNewSegments: newSegments, atIndex: Int(startIndex))
             }
         }
+
+        params.encoder_begin_callback = { (_: OpaquePointer?, _: OpaquePointer?, userData: UnsafeMutableRawPointer?) in
+            guard let userData else { return true }
+            let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
+
+            if whisper.cancelCallback != nil {
+                return false
+            }
+
+            return true
+        }
     }
 
     public func transcribe(audioFrames: [Float], completionHandler: @escaping (Result<[Segment], Error>) -> Void) {
@@ -115,14 +128,33 @@ public class Whisper {
                 )
             }
 
-            DispatchQueue.main.async {
-                self.frameCount = nil
-                self.inProgress = true
+            if let cancelCallback {
+                DispatchQueue.main.async {
+                    // Should cancel callback be called after delegate and completionHandler?
+                    cancelCallback()
 
-                self.delegate?.whisper(self, didCompleteWithSegments: segments)
-                completionHandler(.success(segments))
+                    let error = WhisperError.cancelled
+
+                    self.delegate?.whisper(self, didErrorWith: error)
+                    completionHandler(.failure(error))
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.delegate?.whisper(self, didCompleteWithSegments: segments)
+                    completionHandler(.success(segments))
+                }
             }
+
+            self.frameCount = nil
+            self.cancelCallback = nil
+            self.inProgress = false
         }
+    }
+
+    public func cancel(completionHandler: @escaping () -> Void) {
+        guard inProgress && cancelCallback == nil else { return }
+
+        cancelCallback = completionHandler
     }
 
     @available(iOS 13, macOS 10.15, *)
