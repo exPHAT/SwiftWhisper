@@ -151,8 +151,9 @@ public class Whisper {
         }
     }
 
-    public func cancel(completionHandler: @escaping () -> Void) {
-        guard inProgress && cancelCallback == nil else { return }
+    public func cancel(completionHandler: @escaping () -> Void) throws {
+        guard inProgress else { throw WhisperError.cancellationError(.notInProgress) }
+        guard cancelCallback == nil else { throw WhisperError.cancellationError(.pendingCancellation)}
 
         cancelCallback = completionHandler
     }
@@ -167,6 +168,19 @@ public class Whisper {
                 case .failure(let error):
                     cont.resume(throwing: error)
                 }
+            }
+        }
+    }
+
+    @available(iOS 13, macOS 10.15, *)
+    public func cancel() async throws {
+        return try await withCheckedThrowingContinuation { cont in
+            do {
+                try self.cancel {
+                    cont.resume()
+                }
+            } catch {
+                cont.resume(throwing: error)
             }
         }
     }
