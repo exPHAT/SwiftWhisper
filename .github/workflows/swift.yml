@@ -14,12 +14,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Init sumodules
-        uses: textbook/git-checkout-submodule-action@master
         with:
           submodules: recursive
-          remote: true
 
       - name: Build
         run: swift build -v
