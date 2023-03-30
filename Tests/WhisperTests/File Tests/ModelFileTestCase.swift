@@ -12,6 +12,8 @@ protocol ModelFileTestCase: ResourceDependentTestCase {
 extension ModelFileTestCase {
     var tinyModelURL: URL? {
         get async {
+            let hostedModelURL = URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin")!
+
             guard let path = resourceURL?.appendingPathComponent("tiny.bin") else { return nil }
 
             if FileManager.default.fileExists(atPath: path.path) {
@@ -20,7 +22,7 @@ extension ModelFileTestCase {
 
             do {
                 let url = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<URL, Error>) -> Void in
-                    let urlRequest = URLRequest(url: .init(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin")!)
+                    let urlRequest = URLRequest(url: hostedModelURL)
 
                     URLSession.shared.downloadTask(with: urlRequest) { url, _, error in
                         if let error {

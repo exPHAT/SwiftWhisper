@@ -1,107 +1,43 @@
 import Foundation
 import whisper_cpp
 
-public enum WhisperSamplingStrategy: UInt32 {
-    case greedy = 0
-    case beamSearch
-}
-
-@dynamicMemberLookup
-public class WhisperParams {
-    public static let `default` = WhisperParams(strategy: .greedy)
-
-    internal var whisperParams: whisper_full_params
-    internal var _language: UnsafeMutablePointer<CChar>?
-
-    public init(strategy: WhisperSamplingStrategy = .greedy) {
-        self.whisperParams = whisper_full_default_params(whisper_sampling_strategy(rawValue: strategy.rawValue))
-        self.language = .auto
-    }
-
-    deinit {
-        if let _language {
-            free(_language)
-        }
-    }
-
-    public subscript<T>(dynamicMember keyPath: WritableKeyPath<whisper_full_params, T>) -> T {
-        get { whisperParams[keyPath: keyPath] }
-        set { whisperParams[keyPath: keyPath] = newValue }
-    }
-
-    public var language: WhisperLanguage {
-        get { .init(rawValue: String(Substring(cString: whisperParams.language)))! }
-        set {
-            guard let pointer = strdup(newValue.rawValue) else { return }
-
-            if let _language {
-                free(_language) // Free previous reference since we're creating a new one
-            }
-
-            self._language = pointer
-            whisperParams.language = UnsafePointer(pointer)
-        }
-    }
-
-}
-
-public struct Segment {
-    public let startTime: Int
-    public let endTime: Int
-    public let text: String
-}
-
-public protocol WhisperDelegate {
-    func whisper(_ aWhisper: Whisper, didUpdateProgress progress: Float)
-    func whisper(_ aWhisper: Whisper, didProcessNewSegments segments: [Segment], atIndex index: Int)
-    func whisper(_ aWhisper: Whisper, didCompleteWithSegments segments: [Segment])
-    func whisper(_ aWhisper: Whisper, didErrorWith error: Error)
-}
-
-public extension WhisperDelegate {
-    func whisper(_ aWhisper: Whisper, didUpdateProgress progress: Float) {
-        //
-    }
-
-    func whisper(_ aWhisper: Whisper, didProcessNewSegments segments: [Segment], atIndex index: Int) {
-        //
-    }
-
-    func whisper(_ aWhisper: Whisper, didCompleteWithSegments segments: [Segment]) {
-        //
-    }
-
-    func whisper(_ aWhisper: Whisper, didErrorWith error: Error) {
-        //
-    }
-}
-
 public class Whisper {
     private let whisperContext: OpaquePointer
 
     public var delegate: WhisperDelegate?
     public var params: WhisperParams
+    public private(set) var inProgress = false
 
-    internal var frameCount: Int?
+    internal var frameCount: Int? // Manually track total audio frames for progress calculation (value not in `whisper_state` yet)
 
     public init(fromFileURL fileURL: URL, withParams params: WhisperParams = .default) {
         self.whisperContext = fileURL.relativePath.withCString { whisper_init_from_file($0) }
         self.params = params
+
+        prepareCallbacks()
     }
 
     public init(fromData data: Data, withParams params: WhisperParams = .default) {
-        var copy = data // TODO: Find way around copying memory
+        var copy = data // Need to copy memory so we can gaurentee exclusive ownership over pointer
 
         self.whisperContext = copy.withUnsafeMutableBytes { whisper_init_from_buffer($0.baseAddress!, data.count) }
         self.params = params
+
+        prepareCallbacks()
     }
 
     deinit {
         whisper_free(whisperContext)
     }
 
-    public func transcribe(audioFrames: [Float], completionHandler: @escaping (Result<[Segment], Error>) -> Void) {
-        frameCount = audioFrames.count
+    private func prepareCallbacks() {
+        /*
+         C-style callbacks can't capture any references in swift, so we'll convert `self`
+         to a pointer which whisper passes back as `new_segment_callback_user_data`.
+
+         We can unwrap that and obtain a copy of self inside the callback.
+         */
+        params.new_segment_callback_user_data = Unmanaged.passRetained(self).toOpaque()
 
         params.new_segment_callback = { (ctx: OpaquePointer?, _: OpaquePointer?, newSegmentCount: Int32, userData: UnsafeMutableRawPointer?) in
             guard let ctx, let userData else { return }
@@ -133,7 +69,7 @@ public class Whisper {
                 let progress = Double(lastSegmentTime) / Double(fileLength)
 
                 DispatchQueue.main.async {
-                    delegate.whisper(whisper, didUpdateProgress: Float(progress))
+                    delegate.whisper(whisper, didUpdateProgress: progress)
                 }
             }
 
@@ -141,7 +77,20 @@ public class Whisper {
                 delegate.whisper(whisper, didProcessNewSegments: newSegments, atIndex: Int(startIndex))
             }
         }
-        params.new_segment_callback_user_data = Unmanaged.passRetained(self).toOpaque()
+    }
+
+    public func transcribe(audioFrames: [Float], completionHandler: @escaping (Result<[Segment], Error>) -> Void) {
+        guard !inProgress else {
+            completionHandler(.failure(WhisperError.instanceBusy))
+            return
+        }
+        guard audioFrames.count > 0 else {
+            completionHandler(.failure(WhisperError.invalidFrames))
+            return
+        }
+
+        inProgress = true
+        frameCount = audioFrames.count
 
         DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
 
@@ -168,6 +117,7 @@ public class Whisper {
 
             DispatchQueue.main.async {
                 self.frameCount = nil
+                self.inProgress = true
 
                 self.delegate?.whisper(self, didCompleteWithSegments: segments)
                 completionHandler(.success(segments))
