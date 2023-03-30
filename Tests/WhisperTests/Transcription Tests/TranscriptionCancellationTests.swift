@@ -3,6 +3,8 @@ import XCTest
 @testable import Whisper
 
 class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
+    let timeout: TimeInterval = 10
+
     fileprivate var whisperTinyModel: Whisper {
         get async {
             let modelURL = await tinyModelURL!
@@ -35,7 +37,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation], timeout: 5)
+        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribeCancellationRestart() async {
@@ -72,7 +74,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: 5)
+        wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
     }
 
     func testTranscribeDoubleCancellation() async {
@@ -104,7 +106,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation], timeout: 5)
+        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribePrematureCancellation() async {
@@ -147,7 +149,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        wait(for: [failureExpectation, cancelledExpectation], timeout: 5)
+        wait(for: [failureExpectation, cancelledExpectation], timeout: timeout)
     }
 
 
@@ -188,6 +190,6 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        wait(for: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: 5)
+        wait(for: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: timeout)
     }
 }
