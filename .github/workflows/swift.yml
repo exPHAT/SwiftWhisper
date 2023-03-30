@@ -7,16 +7,17 @@ on:
     branches: [master]
 
 jobs:
+
   build:
     runs-on: macos-latest
-  
-      
+
+    steps:
+    - uses: actions/checkout@v2
+
     - name: Git Sumbodule Update
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive
 
-    steps:
-    - uses: actions/checkout@v2
     - name: Build
       run: swift build -v
