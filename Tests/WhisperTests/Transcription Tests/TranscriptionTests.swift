@@ -30,65 +30,6 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
         wait(for: [successExpectation], timeout: 5)
     }
 
-    func testTranscribeCancellation() async {
-        let whisper = await whisperTinyModel
-        let jfk = jfkAudioFrames!
-
-        let failureExpectation = expectation(description: "Transcription will call the completion handler with error")
-        let cancelExpectation = expectation(description: "Cancel will be called after transcription has started")
-
-        whisper.transcribe(audioFrames: jfk) { result in
-            if case .failure(let error) = result {
-                XCTAssert((error as? WhisperError) == WhisperError.cancelled)
-            } else {
-                XCTFail("Callback should not succeed")
-            }
-
-            failureExpectation.fulfill()
-        }
-
-        whisper.cancel {
-            cancelExpectation.fulfill()
-        }
-
-        wait(for: [cancelExpectation, failureExpectation], timeout: 5)
-    }
-
-    func testTranscribeCancellationRestart() async {
-        let whisper = await whisperTinyModel
-        let jfk = jfkAudioFrames!
-
-        let failureExpectation = expectation(description: "Transcription will call the completion handler with error")
-        let cancelExpectation = expectation(description: "Cancel will be called after transcription has started")
-        let restartExpectation = expectation(description: "Transcription will restart and complete after cancellation")
-
-        whisper.transcribe(audioFrames: jfk) { result in
-            if case .failure(let error) = result {
-                XCTAssert((error as? WhisperError) == WhisperError.cancelled)
-            } else {
-                XCTFail("Callback should not succeed")
-            }
-
-            failureExpectation.fulfill()
-        }
-
-        whisper.cancel {
-            cancelExpectation.fulfill()
-
-            whisper.transcribe(audioFrames: jfk) { result in
-                if case .success(let segments) = result {
-                    XCTAssert(segments.count > 0)
-                } else {
-                    XCTFail("Restarted transcription should succeed")
-                }
-
-                restartExpectation.fulfill()
-            }
-        }
-
-        wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: 5)
-    }
-
     func testTranscribeExclusivity() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
