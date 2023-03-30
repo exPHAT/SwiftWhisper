@@ -12,12 +12,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Git Sumbodule Update
-      run: |
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
+      - name: Init sumodules
+        uses: textbook/git-checkout-submodule-action@master
+        with:
+          submodules: recursive
+          remote: true
 
     - name: Build
       run: swift build -v
