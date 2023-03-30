@@ -17,6 +17,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build
+      - name: Test
         run: swift test -v
 
