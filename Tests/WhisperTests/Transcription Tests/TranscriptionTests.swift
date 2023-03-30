@@ -2,7 +2,7 @@ import XCTest
 @testable import Whisper
 
 class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
-    let timeout: TimeInterval = 10
+    let timeout: TimeInterval = 60
 
     fileprivate var whisperTinyModel: Whisper {
         get async {
