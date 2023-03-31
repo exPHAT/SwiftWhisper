@@ -1,6 +1,6 @@
 
 import XCTest
-@testable import Whisper
+@testable import SwiftWhisper
 
 class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
     let timeout: TimeInterval = 60
@@ -37,7 +37,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
+        await fulfillment(of: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribeCancellationRestart() async {
@@ -74,7 +74,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
+        await fulfillment(of: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
     }
 
     func testTranscribeDoubleCancellation() async {
@@ -106,7 +106,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
+        await fulfillment(of: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribePrematureCancellation() async {
@@ -149,7 +149,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        wait(for: [failureExpectation, cancelledExpectation], timeout: timeout)
+        await fulfillment(of: [failureExpectation, cancelledExpectation], timeout: timeout)
     }
 
 
@@ -190,6 +190,6 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        wait(for: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: timeout)
+        await fulfillment(of: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: timeout)
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import Whisper
+@testable import SwiftWhisper
 
 class LoadModelTests: ResourceDependentTestCase, ModelFileTestCase {
     func testLoadModelFromFile() async {

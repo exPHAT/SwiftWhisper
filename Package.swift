@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "Whisper",
+    name: "SwiftWhisper",
     products: [
-        .library(name: "Whisper", targets: ["Whisper"])
+        .library(name: "SwiftWhisper", targets: ["SwiftWhisper"])
     ],
     targets: [
-        .target(name: "Whisper", dependencies: [.target(name: "whisper_cpp")]),
+        .target(name: "SwiftWhisper", dependencies: [.target(name: "whisper_cpp")]),
         .target(name: "whisper_cpp",
                 cSettings: [.unsafeFlags(["-O3","-DGGML_USE_ACCELERATE=1", "-Wno-everything"])]),
-        .testTarget(name: "WhisperTests", dependencies: [.target(name: "Whisper")], resources: [.copy("TestResources/")])
+        .testTarget(name: "WhisperTests", dependencies: [.target(name: "SwiftWhisper")], resources: [.copy("TestResources/")])
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )
