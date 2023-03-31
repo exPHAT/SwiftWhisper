@@ -101,9 +101,9 @@ public enum WhisperLanguage: String, RawRepresentable, CaseIterable, Identifiabl
     case bashkir       = "ba"
     case javanese      = "jw"
     case sundanese     = "su"
-    
+
     public var id: String { self.rawValue }
-    
+
     public var displayName: String {
         String(describing: self)
     }
