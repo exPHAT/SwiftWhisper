@@ -37,7 +37,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        await fulfillment(of: [cancelExpectation, failureExpectation], timeout: timeout)
+        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribeCancellationRestart() async {
@@ -74,7 +74,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        await fulfillment(of: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
+        wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
     }
 
     func testTranscribeDoubleCancellation() async {
@@ -106,7 +106,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
             }
         )
 
-        await fulfillment(of: [cancelExpectation, failureExpectation], timeout: timeout)
+        wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribePrematureCancellation() async {
@@ -149,7 +149,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        await fulfillment(of: [failureExpectation, cancelledExpectation], timeout: timeout)
+        wait(for: [failureExpectation, cancelledExpectation], timeout: timeout)
     }
 
 
@@ -190,6 +190,6 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
 
         // Should be fine because function is async, but just to be safe
-        await fulfillment(of: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: timeout)
+        wait(for: [failureExpectation, cancelledExpectation, cancellationFailureExpectation], timeout: timeout)
     }
 }

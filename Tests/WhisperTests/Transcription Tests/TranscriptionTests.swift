@@ -29,7 +29,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
             successExpectation.fulfill()
         }
 
-        await fulfillment(of: [successExpectation], timeout: timeout)
+        wait(for: [successExpectation], timeout: timeout)
     }
 
     func testTranscribeExclusivity() async {
@@ -59,7 +59,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
             failureExpectation.fulfill()
         }
 
-        await fulfillment(of: [successExpectation, failureExpectation], timeout: timeout)
+        wait(for: [successExpectation, failureExpectation], timeout: timeout)
     }
 
     func testTranscribeInvalidFramesError() async {
@@ -77,7 +77,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
             failureExpectation.fulfill()
         }
 
-        await fulfillment(of: [failureExpectation], timeout: 5)
+        wait(for: [failureExpectation], timeout: 5)
     }
 
     // Used in testTranscribeDelegate()
@@ -101,7 +101,7 @@ extension TranscriptionTests: WhisperDelegate {
 
         XCTAssert(segments.count > 0)
 
-        await fulfillment(of: [
+        wait(for: [
             try XCTUnwrap(delegateNewSegmentExpectation),
             try XCTUnwrap(delegateProgessExpectation),
             try XCTUnwrap(delegateCompletionExpectation)
