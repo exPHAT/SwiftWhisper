@@ -2,7 +2,7 @@
 
 > The easiest way to use Whisper in Swift
 
-Easily add transcription to your app thanks to [whisper.cpp](https://github.com/ggerganov/whisper.cpp).
+Easily add transcription to your app or package. Powered by [whisper.cpp](https://github.com/ggerganov/whisper.cpp).
 
 ## Install
 
