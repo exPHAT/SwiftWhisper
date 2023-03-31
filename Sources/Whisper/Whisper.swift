@@ -8,7 +8,7 @@ public class Whisper {
     public var params: WhisperParams
     public private(set) var inProgress = false
 
-    internal var frameCount: Int? // Manually track total audio frames for progress calculation (value not in `whisper_state` yet)
+    internal var frameCount: Int? // For progress calculation (value not in `whisper_state` yet)
     internal var cancelCallback: (() -> Void)?
 
     public init(fromFileURL fileURL: URL, withParams params: WhisperParams = .default) {
@@ -41,7 +41,9 @@ public class Whisper {
         params.new_segment_callback_user_data = Unmanaged.passRetained(self).toOpaque()
         params.encoder_begin_callback_user_data = Unmanaged.passRetained(self).toOpaque()
 
+        // swiftlint:disable line_length
         params.new_segment_callback = { (ctx: OpaquePointer?, _: OpaquePointer?, newSegmentCount: Int32, userData: UnsafeMutableRawPointer?) in
+        // swiftlint:enable line_length
             guard let ctx, let userData else { return }
             let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
             guard let delegate = whisper.delegate else { return }
@@ -52,10 +54,10 @@ public class Whisper {
 
             let startIndex = segmentCount - newSegmentCount
 
-            for i in startIndex..<segmentCount {
-                guard let text = whisper_full_get_segment_text(ctx, i) else { continue }
-                let startTime = whisper_full_get_segment_t0(ctx, i)
-                let endTime = whisper_full_get_segment_t1(ctx, i)
+            for index in startIndex..<segmentCount {
+                guard let text = whisper_full_get_segment_text(ctx, index) else { continue }
+                let startTime = whisper_full_get_segment_t0(ctx, index)
+                let endTime = whisper_full_get_segment_t1(ctx, index)
 
                 newSegments.append(.init(
                     startTime: Int(startTime) * 10, // Time is given in ms/10, so correct for that
@@ -114,10 +116,10 @@ public class Whisper {
             var segments: [Segment] = []
             segments.reserveCapacity(Int(segmentCount))
 
-            for i in 0..<segmentCount {
-                guard let text = whisper_full_get_segment_text(whisperContext, i) else { continue }
-                let startTime = whisper_full_get_segment_t0(whisperContext, i)
-                let endTime = whisper_full_get_segment_t1(whisperContext, i)
+            for index in 0..<segmentCount {
+                guard let text = whisper_full_get_segment_text(whisperContext, index) else { continue }
+                let startTime = whisper_full_get_segment_t0(whisperContext, index)
+                let endTime = whisper_full_get_segment_t1(whisperContext, index)
 
                 segments.append(
                     .init(

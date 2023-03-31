@@ -1,6 +1,7 @@
 import Foundation
 import whisper_cpp
 
+// swiftlint:disable identifier_name
 @dynamicMemberLookup
 public class WhisperParams {
     public static let `default` = WhisperParams(strategy: .greedy)
@@ -38,3 +39,4 @@ public class WhisperParams {
         }
     }
 }
+// swiftlint:enable identifier_name
