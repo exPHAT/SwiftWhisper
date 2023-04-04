@@ -30,7 +30,7 @@ jobs:
           submodules: recursive
 
       - name: Test
-        run: swift test -v
+        run: swift test -v -c release
 
   lint:
     runs-on: ubuntu-latest
