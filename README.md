@@ -123,7 +123,7 @@ You can get around this by installing a version of SwiftWhisper that uses `.unsa
   ...
   dependencies: [
     // Using latest commit hash for `fast` branch:
-    .package(url: "https://github.com/exPHAT/SwiftWhisper.git", revision: "cfaee7697e7f5a9d323539c7dcde65d3d3f6c19c"),
+    .package(url: "https://github.com/exPHAT/SwiftWhisper.git", revision: "6ed3484c5cf449041b5c9bcb3ac82455d6a586d7"),
   ],
   ...
 ```
