@@ -112,3 +112,18 @@ func convertAudioFileToPCMArray(fileURL: URL, completionHandler: @escaping (Resu
     }
 }
 ```
+
+### Speed boost :rocket:
+
+You may find the performance of the transcription slow when compiling your app for the `Debug` build configuration. This is because the compiler doesn't fully optimize SwiftWhisper unless the build configuration is set to `Release`.
+
+You can get around this by installing a version of SwiftWhisper that uses `.unsafeFlags(["-03"])` to force a maximum optimization. The easiest way to do this is to use the latest commit on the [`fast`](https://github.com/exPHAT/SwiftWhisper/tree/fast) branch. Alternatively, you can configure your scheme to build in the `Release` configuration.
+
+```swift
+  ...
+  dependencies: [
+    // Using latest commit hash for `fast` branch:
+    .package(url: "https://github.com/exPHAT/SwiftWhisper.git", revision: "cfaee7697e7f5a9d323539c7dcde65d3d3f6c19c"),
+  ],
+  ...
+```
