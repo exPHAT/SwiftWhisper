@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
@@ -8,8 +8,9 @@ let package = Package(
     ],
     targets: [
         .target(name: "SwiftWhisper", dependencies: [.target(name: "whisper_cpp")]),
-        .target(name: "whisper_cpp",
-                cSettings: [.unsafeFlags(["-O3","-DGGML_USE_ACCELERATE=1", "-Wno-everything"])]),
+        .target(name: "whisper_cpp", cSettings: [
+            .define("GGML_USE_ACCELERATE", .when(platforms: [.macOS, .macCatalyst, .iOS]))
+        ]),
         .testTarget(name: "WhisperTests", dependencies: [.target(name: "SwiftWhisper")], resources: [.copy("TestResources/")])
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
