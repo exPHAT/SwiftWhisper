@@ -4,13 +4,13 @@
 
 Easily add transcription to your app or package. Powered by [whisper.cpp](https://github.com/ggerganov/whisper.cpp).
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FexPHAT%2FSwiftWhisper%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/exPHAT/SwiftWhisper)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FexPHAT%2FSwiftWhisper%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/exPHAT/SwiftWhisper)
+
 ## Install
 
-#### Xcode
 
-Add `https://github.com/exPHAT/SwiftWhisper.git` in the ["Swift Package Manager" tab.](https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app)
-
-#### Swift Package
+#### Swift Package Manager
 
 Add SwiftWhisper as a dependency in your `Package.swift` file:
 
@@ -31,11 +31,13 @@ let package = Package(
 )
 ```
 
+#### Xcode
+
+Add `https://github.com/exPHAT/SwiftWhisper.git` in the ["Swift Package Manager" tab.](https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app)
+
 ## Usage
 
-[API Documentation.](https://swiftpackageindex.com/exPHAT/SwiftWhisper/v1.0.0/documentation/)
-
-**All audio must be 16kHz audio frames**
+[API Documentation.](https://swiftpackageindex.com/exPHAT/SwiftWhisper/v1.0.1/documentation/)
 
 ```swift
 import SwiftWhisper
@@ -47,6 +49,8 @@ print("Transcribed audio:", segments.map(\.text).joined())
 ```
 
 #### Delegate methods
+
+You can subscribe to segments, transcription progress, and errors by implementing `WhisperDelegate` and setting `whisper.delegate = ...`
 
 ```swift
 protocol WhisperDelegate {
@@ -64,3 +68,47 @@ protocol WhisperDelegate {
 }
 ```
 
+## Misc
+
+### Downloading Models :inbox_tray:
+
+You can find the pre-trained models at [here](https://huggingface.co/ggerganov/whisper.cpp) for download.
+
+### Converting audio to 16kHz PCM :wrench:
+
+The easiest way to get audio frames into SwiftWhisper is to use [AudioKit](https://github.com/AudioKit/AudioKit). The following example takes an input audio file, converts and resamples it, and returns an array of 16kHz PCM floats.
+
+```swift
+import AudioKit
+
+func convertAudioFileToPCMArray(fileURL: URL, completionHandler: @escaping (Result<[Float], Error>) -> Void) {
+    var options = FormatConverter.Options()
+    options.format = .wav
+    options.sampleRate = 16000
+    options.bitDepth = 16
+    options.channels = 1
+    options.isInterleaved = false
+
+    let tempURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
+    let converter = FormatConverter(inputURL: fileURL, outputURL: tempURL, options: options)
+    converter.start { error in
+        if let error {
+            completionHandler(.failure(error))
+            return
+        }
+
+        let data = try! Data(contentsOf: tempURL) // Handle error here
+
+        let floats = stride(from: 44, to: data.count, by: 2).map {
+            return data[$0..<$0 + 2].withUnsafeBytes {
+                let short = Int16(littleEndian: $0.load(as: Int16.self))
+                return max(-1.0, min(Float(short) / 32767.0, 1.0))
+            }
+        }
+
+        try? FileManager.default.removeItem(at: tempURL)
+
+        completionHandler(.success(floats))
+    }
+}
+```
