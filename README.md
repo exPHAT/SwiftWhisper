@@ -37,7 +37,7 @@ Add `https://github.com/exPHAT/SwiftWhisper.git` in the ["Swift Package Manager"
 
 ## Usage
 
-[API Documentation.](https://swiftpackageindex.com/exPHAT/SwiftWhisper/v1.0.1/documentation/)
+[API Documentation.](https://swiftpackageindex.com/exPHAT/SwiftWhisper/1.0.1/documentation/)
 
 ```swift
 import SwiftWhisper
