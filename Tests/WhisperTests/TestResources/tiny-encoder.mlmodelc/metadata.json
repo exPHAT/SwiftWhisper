@@ -1,0 +1,64 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "storagePrecision" : "Float16",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32)",
+        "shortDescription" : "",
+        "shape" : "[]",
+        "name" : "output",
+        "type" : "MultiArray"
+      }
+    ],
+    "modelParameters" : [
+
+    ],
+    "specificationVersion" : 6,
+    "mlProgramOperationTypeHistogram" : {
+      "Linear" : 24,
+      "Matmul" : 8,
+      "Cast" : 2,
+      "Conv" : 2,
+      "Softmax" : 4,
+      "Add" : 9,
+      "LayerNorm" : 9,
+      "Mul" : 8,
+      "Transpose" : 17,
+      "Gelu" : 6,
+      "Reshape" : 16
+    },
+    "computePrecision" : "Mixed (Float16, Float32, Int32)",
+    "isUpdatable" : "0",
+    "availability" : {
+      "macOS" : "12.0",
+      "tvOS" : "15.0",
+      "watchOS" : "8.0",
+      "iOS" : "15.0",
+      "macCatalyst" : "15.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "userDefinedMetadata" : {
+
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 80 × 3000)",
+        "shortDescription" : "",
+        "shape" : "[1, 80, 3000]",
+        "name" : "logmel_data",
+        "type" : "MultiArray"
+      }
+    ],
+    "generatedClassName" : "coreml_encoder_tiny",
+    "method" : "predict"
+  }
+]
