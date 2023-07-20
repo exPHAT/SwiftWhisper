@@ -76,8 +76,7 @@ You can find the pre-trained models [here](https://huggingface.co/ggerganov/whis
 
 ### CoreML Support :brain:
 
-If a CoreML model under the same name as the normal model can be found with the suffix altered to `-encoder.mlmodelc` (Example: `tiny.bin` would also sit beside a `tiny-encoder.mlmodelc` file), and you are using the `Whisper(fromFileURL:)` initializer, then the CoreML will be used for transcription! You can verify it's active by checking the console output.  
- 
+To use CoreML, you'll need to include a CoreML model file with the suffix `-encoder.mlmodelc` under the same name as the whisper model (Example: `tiny.bin` would also sit beside a `tiny-encoder.mlmodelc` file). In addition to the additonal model file, you will also need to use the `Whisper(fromFileURL:)` initializer. You can verify CoreML is active by checking the console output during transcription.
 
 ### Converting audio to 16kHz PCM :wrench:
 
