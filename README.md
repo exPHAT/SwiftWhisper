@@ -72,7 +72,11 @@ protocol WhisperDelegate {
 
 ### Downloading Models :inbox_tray:
 
-You can find the pre-trained models at [here](https://huggingface.co/ggerganov/whisper.cpp) for download.
+You can find the pre-trained models [here](https://huggingface.co/ggerganov/whisper.cpp) for download.
+
+### CoreML Support :brain:
+
+To use CoreML, you'll need to include a CoreML model file with the suffix `-encoder.mlmodelc` under the same name as the whisper model (Example: `tiny.bin` would also sit beside a `tiny-encoder.mlmodelc` file). In addition to the additonal model file, you will also need to use the `Whisper(fromFileURL:)` initializer. You can verify CoreML is active by checking the console output during transcription.
 
 ### Converting audio to 16kHz PCM :wrench:
 
@@ -113,7 +117,7 @@ func convertAudioFileToPCMArray(fileURL: URL, completionHandler: @escaping (Resu
 }
 ```
 
-### Speed boost :rocket:
+### Development speed boost :rocket:
 
 You may find the performance of the transcription slow when compiling your app for the `Debug` build configuration. This is because the compiler doesn't fully optimize SwiftWhisper unless the build configuration is set to `Release`.
 
@@ -123,7 +127,7 @@ You can get around this by installing a version of SwiftWhisper that uses `.unsa
   ...
   dependencies: [
     // Using latest commit hash for `fast` branch:
-    .package(url: "https://github.com/exPHAT/SwiftWhisper.git", revision: "6ed3484c5cf449041b5c9bcb3ac82455d6a586d7"),
+    .package(url: "https://github.com/exPHAT/SwiftWhisper.git", revision: "d7c0925045e671624db31488c6ffdc7207dd23fa"),
   ],
   ...
 ```
