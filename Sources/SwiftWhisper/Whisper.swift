@@ -83,7 +83,9 @@ public class Whisper {
             return true
         }
 
+        // swiftlint:disable line_length
         params.progress_callback = { (_: OpaquePointer?, _: OpaquePointer?, progress: Int32, userData: UnsafeMutableRawPointer?) in
+        // swiftlint:enable line_length
             guard let userData else { return }
             let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
 
