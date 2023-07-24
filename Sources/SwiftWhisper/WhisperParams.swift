@@ -15,7 +15,7 @@ public class WhisperParams {
     }
 
     deinit {
-        if let _language {
+        if let _language = _language {
             free(_language)
         }
     }
@@ -30,7 +30,7 @@ public class WhisperParams {
         set {
             guard let pointer = strdup(newValue.rawValue) else { return }
 
-            if let _language {
+            if let _language = _language {
                 free(_language) // Free previous reference since we're creating a new one
             }
 
