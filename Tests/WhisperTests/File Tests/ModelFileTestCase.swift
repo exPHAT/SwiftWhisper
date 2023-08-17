@@ -6,12 +6,12 @@ import FoundationNetworking
 #endif
 
 protocol ModelFileTestCase: ResourceDependentTestCase {
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
     var tinyModelURL: URL? { get async }
 }
 
 extension ModelFileTestCase {
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
     var tinyModelURL: URL? {
         get async {
             let hostedModelURL = URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin")!
