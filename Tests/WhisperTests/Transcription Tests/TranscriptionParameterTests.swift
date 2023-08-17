@@ -4,7 +4,7 @@ import XCTest
 class TranscriptionParamterTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
     let timeout: TimeInterval = 60
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testParametersMaxLen() async throws {
         let params = WhisperParams()
         params.language = .english

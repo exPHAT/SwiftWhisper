@@ -4,7 +4,7 @@ import XCTest
 class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
     let timeout: TimeInterval = 60
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     fileprivate var whisperTinyModel: Whisper {
         get async {
             let modelURL = await tinyModelURL!
@@ -14,7 +14,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
         }
     }
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTrascribeCompletionHandler() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -34,7 +34,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
         wait(for: [successExpectation], timeout: timeout)
     }
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeExclusivity() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -65,7 +65,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
         wait(for: [successExpectation, failureExpectation], timeout: timeout)
     }
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeInvalidFramesError() async {
         let whisper = await whisperTinyModel
 
@@ -91,7 +91,7 @@ class TranscriptionTests: ResourceDependentTestCase, ModelFileTestCase, AudioFil
 }
 
 extension TranscriptionTests: WhisperDelegate {
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeDelegate() async throws {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!

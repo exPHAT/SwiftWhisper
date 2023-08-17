@@ -175,7 +175,7 @@ public class Whisper {
         cancelCallback = completionHandler
     }
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     public func transcribe(audioFrames: [Float]) async throws -> [Segment] {
         return try await withCheckedThrowingContinuation { cont in
             self.transcribe(audioFrames: audioFrames) { result in
@@ -189,7 +189,7 @@ public class Whisper {
         }
     }
 
-    @available(iOS 13, macOS 10.15, watchOS 6.0, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     public func cancel() async throws {
         return try await withCheckedThrowingContinuation { cont in
             do {
