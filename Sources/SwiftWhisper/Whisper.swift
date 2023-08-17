@@ -45,7 +45,8 @@ public class Whisper {
         // swiftlint:disable line_length
         params.new_segment_callback = { (ctx: OpaquePointer?, _: OpaquePointer?, newSegmentCount: Int32, userData: UnsafeMutableRawPointer?) in
         // swiftlint:enable line_length
-            guard let ctx, let userData else { return }
+            guard let ctx = ctx,
+                  let userData = userData else { return }
             let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
             guard let delegate = whisper.delegate else { return }
 
@@ -73,7 +74,7 @@ public class Whisper {
         }
 
         params.encoder_begin_callback = { (_: OpaquePointer?, _: OpaquePointer?, userData: UnsafeMutableRawPointer?) in
-            guard let userData else { return true }
+            guard let userData = userData else { return true }
             let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
 
             if whisper.cancelCallback != nil {
@@ -86,7 +87,7 @@ public class Whisper {
         // swiftlint:disable line_length
         params.progress_callback = { (_: OpaquePointer?, _: OpaquePointer?, progress: Int32, userData: UnsafeMutableRawPointer?) in
         // swiftlint:enable line_length
-            guard let userData else { return }
+            guard let userData = userData else { return }
             let whisper = Unmanaged<Whisper>.fromOpaque(userData).takeUnretainedValue()
 
             DispatchQueue.main.async {
@@ -96,7 +97,7 @@ public class Whisper {
     }
 
     private func cleanupCallbacks() {
-        guard let unmanagedSelf else { return }
+        guard let unmanagedSelf = unmanagedSelf else { return }
 
         unmanagedSelf.release()
         self.unmanagedSelf = nil
@@ -174,7 +175,7 @@ public class Whisper {
         cancelCallback = completionHandler
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     public func transcribe(audioFrames: [Float]) async throws -> [Segment] {
         return try await withCheckedThrowingContinuation { cont in
             self.transcribe(audioFrames: audioFrames) { result in
@@ -188,7 +189,7 @@ public class Whisper {
         }
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     public func cancel() async throws {
         return try await withCheckedThrowingContinuation { cont in
             do {

@@ -5,7 +5,7 @@ import XCTest
 class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCase, AudioFileTestCase {
     let timeout: TimeInterval = 60
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     fileprivate var whisperTinyModel: Whisper {
         get async {
             let modelURL = await tinyModelURL!
@@ -15,7 +15,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeCancellation() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -42,7 +42,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeCancellationRestart() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -80,7 +80,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         wait(for: [cancelExpectation, failureExpectation, restartExpectation], timeout: timeout)
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribeDoubleCancellation() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -113,7 +113,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         wait(for: [cancelExpectation, failureExpectation], timeout: timeout)
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscribePrematureCancellation() async {
         let whisper = await whisperTinyModel
 
@@ -128,7 +128,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
         }
     }
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscriptionAsyncCancel() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
@@ -159,7 +159,7 @@ class TranscriptionCancellationTests: ResourceDependentTestCase, ModelFileTestCa
     }
 
 
-    @available(iOS 13, macOS 10.15, *)
+    @available(iOS 13, macOS 10.15, watchOS 6.0, tvOS 13.0, *)
     func testTranscriptionAsyncCancelTwice() async {
         let whisper = await whisperTinyModel
         let jfk = jfkAudioFrames!
