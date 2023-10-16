@@ -20,9 +20,8 @@ let package = Package(
         ),
         .target(
             name: "whisper_cpp_metal",
-            path: "Sources/whisper_metal",
+            path: "Sources/whisper_cpp_metal",
             sources: ["ggml-metal.m"],
-            resources: [.process("../Resources/ggml-metal.metal")],
             publicHeadersPath: "include",
             cSettings: [
                 .unsafeFlags(["-fno-objc-arc"])

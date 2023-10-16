@@ -1,1 +1,1 @@
-../whisper_metal/ggml-metal.h
+../whisper_cpp_metal/ggml-metal.h
