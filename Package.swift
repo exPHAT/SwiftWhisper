@@ -14,15 +14,47 @@ let package = Package(
         .library(name: "SwiftWhisper", targets: ["SwiftWhisper"])
     ],
     targets: [
-        .target(name: "SwiftWhisper", dependencies: [.target(name: "whisper_cpp")]),
-        .target(name: "whisper_cpp",
-                exclude: exclude,
-                cSettings: [
-                    .define("GGML_USE_ACCELERATE", .when(platforms: [.macOS, .macCatalyst, .iOS])),
-                    .define("WHISPER_USE_COREML", .when(platforms: [.macOS, .macCatalyst, .iOS])),
-                    .define("WHISPER_COREML_ALLOW_FALLBACK", .when(platforms: [.macOS, .macCatalyst, .iOS]))
-                ]),
-        .testTarget(name: "WhisperTests", dependencies: [.target(name: "SwiftWhisper")], resources: [.copy("TestResources/")])
+        .target(
+            name: "SwiftWhisper",
+            dependencies: ["whisper_cpp", "whisper_cpp_metal"]
+        ),
+        .target(
+            name: "whisper_cpp_metal",
+            path: "Sources/whisper_cpp_metal",
+            sources: ["ggml-metal.m"],
+            publicHeadersPath: "include",
+            cSettings: [
+                .unsafeFlags(["-fno-objc-arc"])
+            ]
+        ),
+        .target(
+            name: "whisper_cpp",
+            dependencies: [.target(name: "whisper_cpp_metal")],
+            path: "Sources/whisper_cpp",
+            sources: [
+                "ggml.c",
+                "ggml-alloc.c",
+                "coreml/whisper-encoder-impl.m",
+                "coreml/whisper-encoder.mm",
+                "whisper.cpp",
+            ],
+            publicHeadersPath: "include",
+            cSettings: [
+                .unsafeFlags(["-Wno-shorten-64-to-32"]),
+                .define("GGML_USE_ACCELERATE", .when(platforms: [.macOS, .macCatalyst, .iOS])),
+                .define("WHISPER_USE_COREML", .when(platforms: [.macOS, .macCatalyst, .iOS])),
+                .define("WHISPER_COREML_ALLOW_FALLBACK", .when(platforms: [.macOS, .macCatalyst, .iOS])),
+                .define("GGML_USE_METAL", .when(platforms: [.macOS, .macCatalyst, .iOS]))
+            ],
+            linkerSettings: [
+                .linkedFramework("Accelerate"),
+            ]
+        ),
+        .testTarget(
+            name: "WhisperTests",
+            dependencies: ["SwiftWhisper"],
+            resources: [.copy("TestResources/")]
+        )
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )
