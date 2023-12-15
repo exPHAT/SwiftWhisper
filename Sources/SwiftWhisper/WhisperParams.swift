@@ -1,5 +1,5 @@
 import Foundation
-import whisper_cpp
+import whisper
 
 // swiftlint:disable identifier_name
 @dynamicMemberLookup

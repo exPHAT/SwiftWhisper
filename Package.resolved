@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "whisper",
+        "repositoryURL": "https://github.com/ggerganov/whisper.cpp",
+        "state": {
+          "branch": "master",
+          "revision": "940de9dbe9c90624dc99521cb34c8a97b86d543c",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

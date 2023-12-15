@@ -1,1 +1,0 @@
-../../../whisper.cpp/coreml/whisper-encoder-impl.m
